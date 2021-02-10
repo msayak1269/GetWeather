@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        body {
+            background-image: linear-gradient(to right bottom, #ff577f, #ff884b);
+            height: 100vh;
+            font-family: 'Raleway', sans-serif;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        #header {
+            background-image: linear-gradient(to right bottom, #f88f01, #ff577f);
+        }
+
+        .card {
+            display: flex;
+            height: fit-content;
+            width: fit-content;
+            align-items: center;
+            background-image: linear-gradient(to right bottom, #ff577f, #ffdcdc);
+            box-shadow: 0px 0px 10px 0px rgb(68, 54, 158);
+            -webkit-border-radius:25px;
+            border-radius: 25px;
+        }
+        span{
+            font-weight: bold;
+            
+        }
+        #city{
+            -moz-border-radius: 30px;
+            -webkit-border-radius: 30px;
+            border-radius: 30px;
+            border: none;
+            height: 37px;
+            
+        }
+        #city:focus{
+            outline: none;
+        }
+        #search{
+            text-decoration: none;
+            -moz--moz-border-radius:30px;
+            -webkit-border-radius:30px;
+            border-radius: 30px;
+        }
+        footer{
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="p-3 text-white text-center" id="header">
+        <h2>Weather</h2>
+    </div>
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/view" method="POST">
+                        <div class="form-group">
+                            <label for="city"></label>
+                            <input type="text" placeholder="    Enter City" size="22" name="city" id="city">
+                            <button class="btn btn-primary" id="search">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <button class="btn btn-primary" id="button">Click</button> -->
+    {% if data["cod"]==200 %}
+    <div class="container-fluid mt-3" id="result">
+        <div class="row justify-content-center">
+            <div class="card">
+                <div class="card-header text-center" style="width: 100%;">
+                    <span id="city"><strong>{{ data["name"] }} , {{ data["sys"]["country"]}}</strong></span>
+                </div>
+                <div class="card-body text-center m-0">
+                    <span id="date" style="font-weight: bold;"></span>
+                    <br>
+                    <span><img id="wicon" src="http://openweathermap.org/img/w/{{data['weather'][0]['icon']}}.png"></span>
+                    <span id="description"
+                        class="text-center">{{ description }}
+                    </span>
+                    <br>
+                    <span>Temparature : </span><span id="tempInCel">{{temp[0]}}</span><span> &#8451; | </span><span
+                        id="tempInFar">{{temp[1]}}</span><span>&#8457; </span>
+                    <br>
+                    <span>Feels Like : </span><span>{{data["main"]["feels_like"]}}&#8451;</span>
+                    <br>
+                    <span>Humidity :</span> <span id="humidity">{{ data["main"]["humidity"] }}%</span>
+                    <br>
+                    <span>Wind : </span> <span id="wind">{{data["wind"]["speed"] }} m/s</span> <span id="windDirection">{{windDirection}}</span>
+                    <br>
+                    <!-- <span>Rain(in Last 3 hours) : </span><span id="rain"></span>
+                    <br> -->
+                    <span>Cloudiness : </span> <span id="cloud">{{data["clouds"]["all"]}}</span>
+                </div>
+                <div class="card-footer text-center" style="width: 100%;">"A Change in the Weather is sufficient to <br> recreate
+                the world and ourselves...."</div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center mt-5 text-white">
+        <h1>No City Found</h1>
+    </div> 
+    {% endif %}
+    <footer class="text-center text-white mb-2" style="width: 100%;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-0"></div>
+                <div class="col-md-4 col-sm-12">
+                    <div class="text-center text-white">
+                        <h5>Developed By</h5>
+                        <a href="https://www.facebook.com/msayak1269">Sayak Mukhopadhyay</a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-0"></div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function unixToDate(dt) {
+            var time = new Date(dt * 1000),
+            month = time.getMonth() + 1,
+            day = time.getDate(),
+            year = time.getFullYear(),
+            res = day + '/' + month + '/' + year;
+            // console.log(res);
+            return res;
+        }
+        $(document).ready(function () {
+            $("#date").text(unixToDate(parseInt("{{data['dt']}}")))
+        });
+    </script>
+     <script src="/app.js"></script>
+</body>
+
+</html>
